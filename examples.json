@@ -1,0 +1,15 @@
+{
+  "before":[
+    {"kind":"field","name":"Deal.External_Ref","type":"text"},
+    {"kind":"layout","name":"Deal.Default","depends_on":["field:Deal.External_Ref"]},
+    {"kind":"validation","name":"Deal.Require_Ref","depends_on":["field:Deal.External_Ref"],"enabled":true},
+    {"kind":"function","name":"Post_Deal","depends_on":["field:Deal.External_Ref"],"version":"v1"},
+    {"kind":"webhook","name":"Deal_Changed","depends_on":["function:Post_Deal"]}
+  ],
+  "after":[
+    {"kind":"layout","name":"Deal.Default","depends_on":["field:Deal.External_Ref"]},
+    {"kind":"validation","name":"Deal.Require_Ref","depends_on":["field:Deal.External_Ref"],"enabled":false},
+    {"kind":"function","name":"Post_Deal","depends_on":["field:Deal.External_Ref"],"version":"v2"},
+    {"kind":"webhook","name":"Deal_Changed","depends_on":["function:Post_Deal"]}
+  ]
+}
