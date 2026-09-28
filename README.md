@@ -1,27 +1,33 @@
-# Zoho Release Readiness Audit
+# zoho-release-readiness-audit (moved)
 
-An offline comparison of **fictional** CRM configuration manifests before and after a proposed release. It lists added, removed and changed components, flags broken dependencies and prompts review of workflow, validation, function and webhook changes. It prints a target-manifest fingerprint for evidence. It does not fetch Zoho metadata, run Deluge, deploy config or claim a release is safe.
+This project moved to [zoho-implementation-toolkit](https://github.com/prashobnair/zoho-implementation-toolkit) as the `release` module. Its full commit history was preserved there.
 
-## Contract use-case
+It compares before/after configuration manifests so a release review catches added, removed, and broken pieces before ship.
 
-A [Zoho CRM migration consultant contract posting](https://www.linkedin.com/posts/hari-prasad-palana-8b9a53291_zohocrm-zohodeveloper-deluge-activity-7458417036126359552-oIc4) called for reviewing sandbox fields, layouts, workflows, validation dependencies, Deluge functions, API mappings, testing and rollback. The [Zoho CRM Upwork board](https://www.upwork.com/freelance-jobs/zoho-crm/) also samples troubleshooting requests. The LinkedIn posting was dated May 8, 2026 and is not asserted to be open now. This repo illustrates a change-review slice, not work for either poster.
-
-## Run
-
-Python 3.10+ and standard library only. From the repository root:
+## Use it now
 
 ```sh
-python3 cli.py examples.json
-python3 cli.py examples.json --strict  # exit code 2 on review findings
-python3 -m unittest discover -p 'test_*.py' -v
+pip install https://github.com/prashobnair/zoho-implementation-toolkit/releases/download/v0.1.0/zohokit-0.1.0-py3-none-any.whl
 ```
 
-No Zoho trial, API key, Docker, browser or paid plan is needed. The fictional bad fixture removes `Deal.External_Ref`, disables its validation and changes a function version while layout/function still depend on the removed field. Output includes `removal_review`, `behavior_regression_review`, `missing_dependency`, `ready_for_release: false` and `deployment_actions: 0`. Comparing a manifest to itself passes these *narrow* checks. `DESIGN.md` describes review and rollback.
+or
 
-## Manifest contract
+```sh
+uv tool install git+https://github.com/prashobnair/zoho-implementation-toolkit@v0.1.0
+```
 
-Each list has components with unique `(kind, name)`, where kind is `field`, `layout`, `workflow`, `validation`, `function` or `webhook`. `depends_on` is a list of strings like `field:Deal.External_Ref`. The diff compares JSON component values, flags behavioral types and checks references against the target manifest. A SHA-256 of the target list is produced for repeatability, not authenticity or approval. This is a **fictional intermediate model**, not a Zoho CRM sandbox export schema or API payload.
+The old `python cli.py manifest.json [--strict]` is now:
 
-## Boundary
+```sh
+zohokit release diff before-after.json [--strict]
+```
 
-A clean report does not prove production readiness: it misses runtime behavior, permissions, test coverage, ordering, hidden vendor dependencies, performance and deployment history. Before touching a tenant, inspect current Zoho docs and metadata, verify the correct sandbox/production organization, run regression tests and secure a human-reviewed sequence, backup and rollback. Never put client configuration or secrets in this repo.
+`--strict` exits 2 when the release is not ready. Reports render with `--format json|table|markdown|html` and `--out`.
+
+## Links
+
+- Module guide: https://prashobnair.github.io/zoho-implementation-toolkit/modules/release/
+- What changed versus this repo: https://prashobnair.github.io/zoho-implementation-toolkit/legacy-parity/
+- Source: https://github.com/prashobnair/zoho-implementation-toolkit/tree/main/src/zohokit/modules/release
+
+This repository is archived and read-only.
